@@ -1,6 +1,5 @@
 require 'nokogiri'
 require 'open-uri'
-require 'debugger'
 require 'sinatra'
 require 'haml'
 
