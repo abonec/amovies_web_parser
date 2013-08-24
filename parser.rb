@@ -29,6 +29,5 @@ module Parser
       end
     end]
   end
-
   extend self
 end
