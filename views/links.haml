@@ -2,6 +2,7 @@
   %head
   %body
     %table
+      = haml :form
       - series.each do |episode, links|
         %tr
           %td= episode
