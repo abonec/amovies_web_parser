@@ -14,13 +14,21 @@ module Parser
   def parse_amovies url
     doc = Nokogiri::HTML open url
 
-    Hash[doc.xpath('//select[@id="series"]/option').map{|option| [option.content.force_encoding("utf-8"), option.attributes["value"].to_s]}]
+    result = Hash[doc.xpath('//select[@id="series"]/option').map{|option| [option.content.force_encoding("utf-8"), option.attributes["value"].to_s]}]
+    result[:title] = doc.css('.page .full-news center b').first.content
+    result
   end
 
   def get_series url
     serials_map = parse_amovies url
     Hash[serials_map.map do |episode, vk_link|
-      [episode, parse_vk(vk_link)]
+      if episode == :title
+        [:title, vk_link]
+      else
+        [episode, parse_vk(vk_link)]
+      end
     end]
   end
+
+  extend self
 end

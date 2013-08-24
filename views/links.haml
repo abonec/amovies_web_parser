@@ -3,7 +3,11 @@
   %body
     %table
       = haml :form
+      %br
+      %b= series[:title]
+      %br
       - series.each do |episode, links|
+        - next if episode == :title
         %tr
           %td= episode
           -links.each do |resolution, link|
