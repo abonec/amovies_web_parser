@@ -1,0 +1,10 @@
+﻿%html
+  %head
+  %body
+    %table
+      - series.each do |episode, links|
+        %tr
+          %td= episode
+          -links.each do |resolution, link|
+            %td
+              %a{ href: link}= resolution
