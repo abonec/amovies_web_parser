@@ -4,7 +4,7 @@ module Parser
   def parse_vk url
     doc = Nokogiri::HTML open url
 
-    value = doc.xpath('//object/param[@name="flashvars"]').first.attributes["value"].to_s
+    value = doc.xpath('//object/embed').first.attributes["flashvars"].to_s
     value = URI.unescape value
     Hash[value.split("&").select{|param| param[/^url\d\d\d\=/]}.map do |param|
       param.match(/^url(\d\d\d)\=(.*)/).captures
