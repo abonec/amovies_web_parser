@@ -32,7 +32,7 @@ puts get_series("http://amovies.tv/serials/490-vo-vse-tyazhkie.html")
 
 
 get '/' do
-  "http://cs1-50v4.vk.me/p19/cded410d8122.720.mp4"
+  "<a src='http://cs1-50v4.vk.me/p19/cded410d8122.720.mp4'>http://cs1-50v4.vk.me/p19/cded410d8122.720.mp4</a>"
 end
 
 
