@@ -21,7 +21,7 @@ get '/heroku_test' do
 end
 
 get '/vk_head' do
-  uri = URI.parse "http://cs533322v4.vk.me/u219120229/videos/a26f0fd78c.720.mp4"
+  uri = URI.parse Parser.parse_vk("http://vk.com/video_ext.php?oid=-56436575&id=165929277&hash=225039cd9b76e1e9&sd").to_a.last.last
   req = Net::HTTP.new(uri.hostname, 80)
   req.request_head(uri.path).inspect
 end
