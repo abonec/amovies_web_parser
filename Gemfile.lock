@@ -3,7 +3,12 @@ GEM
   specs:
     haml (4.0.3)
       tilt
+    httparty (0.13.1)
+      json (~> 1.8)
+      multi_xml (>= 0.5.2)
+    json (1.8.1)
     mini_portile (0.5.1)
+    multi_xml (0.5.5)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     rack (1.5.2)
@@ -20,5 +25,6 @@ PLATFORMS
 
 DEPENDENCIES
   haml
+  httparty
   nokogiri
   sinatra
