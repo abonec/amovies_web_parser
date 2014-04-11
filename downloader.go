@@ -17,6 +17,7 @@ func init() {
   DOWNLOAD_DIR = os.Getenv("DIR")
 }
 func main() {
+  fmt.Println("Download dir: ",DOWNLOAD_DIR)
   r := mux.NewRouter()
   r.HandleFunc("/down", add_download).Methods("GET")
   http.Handle("/", r)
