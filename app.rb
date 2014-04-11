@@ -1,6 +1,6 @@
 require 'sinatra'
 require 'haml'
-require './parser'
+require File.join(File.dirname(__FILE__), 'parser')
 require 'net/http'
 require 'httparty'
 
