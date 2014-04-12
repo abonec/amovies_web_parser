@@ -1,0 +1,2 @@
+GOARCH=arm ARM=5 go build -o downloader_arm downloader.go
+go build downloader.go

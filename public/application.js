@@ -5,7 +5,9 @@
     var prefix = $(this).data('prefix');
     $.post('/download',
            {link: link, episode: episode, prefix: prefix}, 
-           function(){console.log('ok')});
+           function(data){
+             alert(data);
+           });
     e.preventDefault();
   });
-})
+});
