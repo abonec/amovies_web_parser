@@ -27,18 +27,22 @@ func main() {
 }
 
 func index_page(w http.ResponseWriter, r *http.Request) {
-  TEMPLATES.ExecuteTemplate(w, "index_page", nil)
+  render(w, "index_page", nil)
 }
 func links_page(w http.ResponseWriter, r *http.Request) {
   serial := &Serial{}
   serial.Init(get_param(r, "url"))
   serial.ParseEpisodes()
 
-  TEMPLATES.ExecuteTemplate(w, "links_page", serial)
+  render(w, "links_page", serial)
 }
 func get_param(r *http.Request, key string) string {
   uri, _ := url.Parse(r.RequestURI)
   return uri.Query().Get(key)
+}
+
+func render(w http.ResponseWriter, template string, data interface{}){
+  TEMPLATES.ExecuteTemplate(w, template, data)
 }
 
 func add_download(w http.ResponseWriter, r *http.Request) {
