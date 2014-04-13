@@ -20,6 +20,7 @@ import _ "code.google.com/p/go-charset/data"
 var (
   DOWNLOAD_DIR = ""
   QUALITY_REGEXP = regexp.MustCompile(`url(?P<quality>\d\d\d)=(?P<url>.*?mp4)`)
+  TEMPLATES = template.Must(template.ParseFiles("views/index.tpl", "views/links.tpl", "views/get_serial_form.tpl"))
 )
 
 type Serial struct {
@@ -118,16 +119,14 @@ func add_download(w http.ResponseWriter, r *http.Request) {
   fmt.Fprintln(w, "Queued:", filename)
 }
 func index_page(w http.ResponseWriter, r *http.Request) {
-  t, _ := template.ParseFiles("views/index.html")
-  t.Execute(w, nil)
+  TEMPLATES.ExecuteTemplate(w, "index_page", nil)
 }
 func links_page(w http.ResponseWriter, r *http.Request) {
   serial := &Serial{}
   serial.Init(get_param(r, "url"))
   serial.ParseEpisodes()
 
-  t, _ := template.ParseFiles("views/links.html")
-  t.Execute(w, serial)
+  TEMPLATES.ExecuteTemplate(w, "links_page", serial)
 }
 func get_param(r *http.Request, key string) string {
   uri, _ := url.Parse(r.RequestURI)
