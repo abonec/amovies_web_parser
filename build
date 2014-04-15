@@ -1,2 +1,0 @@
-GOARCH=arm ARM=5 go build -o serial_parser_arm_pi
-go build -o serial_parser

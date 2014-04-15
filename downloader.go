@@ -8,43 +8,55 @@ import (
 )
 
 
+type Download struct {
+  Filename string
+  Link string
+  Progress int
+  Downloaded bool
+  Length int64
+}
+type Downloads struct {
+  Downloading map[*Download]bool
+  Downloaded map[*Download]bool
+}
+func(d *Downloads)Init(){
+  d.Downloading = make(map[*Download]bool)
+  d.Downloaded = make(map[*Download]bool)
+}
+func(d *Downloads)AddDownload(link, filename string, length int64)(download *Download){
+  download = &Download{filename, link, 0, false, length}
+  d.Downloading[download] = true
+  return download
+}
+func(d *Downloads)Finish(download *Download){
+  download.Downloaded = true
+  d.Downloaded[download] = true
+  delete(d.Downloading, download)
+}
 var (
   DOWNLOAD_DIR = ""
-  DOWNLOADING = make([]string, 10)
-  DOWNLOADED = make([]string, 100)
+  TEMP_PREFIX = ".part"
+  DOWNLOADS = &Downloads{}
 )
 
 func init() {
   DOWNLOAD_DIR = os.Getenv("DIR")
+  // TEMP_PREFIX = os.Getenv("TEMP_PREFIX")
+  DOWNLOADS.Init()
 }
-func download(_url string, file_name string){
+func download(_url, file_name string, progress chan int, length_chan chan int64)(written int64, err error) {
   file_name = DOWNLOAD_DIR + file_name
-  tmp_name := file_name + ".part"
-  out, err := os.Create(tmp_name)
-  if err != nil {
-    fmt.Println(err)
-    return
-  }
-  defer out.Close()
-
-  resp, _ := http.Get(_url)
-  defer resp.Body.Close()
-
-  fmt.Println("Downloading started ", tmp_name)
-  io.Copy(out, resp.Body)
-  os.Rename(tmp_name, file_name)
-  fmt.Println("Downloaded ", file_name)
-}
-func download_imp(_url, file_name string, progress chan int)(written int64, err error) {
-  out, _ := os.Create(file_name)
+  temp_name := file_name + ".part"
+  out, _ := os.Create(temp_name)
   resp, _ := http.Get(_url)
   defer out.Close()
   defer resp.Body.Close()
   defer close(progress)
 
   length, _ := strconv.ParseInt(resp.Header["Content-Length"][0], 10, 64)
+  length_chan <- length
   every := length / 100
-  percentage := int64(0)
+  var percentage int64 = 0
 
 
   fmt.Println(length)
@@ -77,5 +89,25 @@ func download_imp(_url, file_name string, progress chan int)(written int64, err 
       err = er
     }
   }
+  os.Rename(temp_name, file_name)
   return written, err
+}
+
+func capture_downloading(url, filename string, length int64, progress chan int){
+  download := DOWNLOADS.AddDownload(url, filename, length)
+  for p := range progress {
+    download.Progress = p
+    fmt.Println(p)
+  }
+  DOWNLOADS.Finish(download)
+}
+
+func start_download(link, filename string) {
+  progress_chan := make(chan int)
+  go func(){
+    length_chan := make(chan int64)
+    go download(link, filename, progress_chan, length_chan)
+    go capture_downloading(link, filename, <- length_chan, progress_chan)
+  }()
+  <- progress_chan
 }
