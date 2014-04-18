@@ -4,8 +4,8 @@ import (
   "net/http"
   "github.com/go-martini/martini"
   "log"
-  "./controllers"
-  "./conf"
+  "amovies_parser/controllers"
+  "amovies_parser/conf"
 )
 
 func main() {

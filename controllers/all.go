@@ -7,9 +7,9 @@ import (
   "strings"
   "github.com/aquilax/cyrslug"
   "html/template"
-  "../models"
-  "../helpers"
-  "../conf"
+  "amovies_parser/models"
+  "amovies_parser/helpers"
+  "amovies_parser/conf"
 )
 
 var (

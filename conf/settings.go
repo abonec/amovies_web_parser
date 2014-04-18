@@ -3,7 +3,7 @@ package conf
 import (
   "os"
   "fmt"
-  "../models"
+  "amovies_parser/models"
 )
 
 var (

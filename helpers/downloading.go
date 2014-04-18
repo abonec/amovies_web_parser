@@ -6,7 +6,7 @@ import (
   "strconv"
   "fmt"
   "io"
-  "../conf"
+  "amovies_parser/conf"
 )
 
 
