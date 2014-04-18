@@ -16,5 +16,5 @@ func main() {
   m.Get("/links", controllers.LinksPage)
   m.Get("/downloads", controllers.DownloadsPage)
   m.Get("/", controllers.IndexPage)
-  log.Fatal(http.ListenAndServe(":6101", m))
+  log.Fatal(http.ListenAndServe(":6100", m))
 }
