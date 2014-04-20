@@ -2,11 +2,13 @@ package models
 
 import (
   "github.com/PuerkitoBio/goquery"
+  /* "github.com/franela/goreq" */
   "strings"
   "regexp"
   "code.google.com/p/go-charset/charset"
   "fmt"
   "io/ioutil"
+  "log"
 )
 
 import _ "code.google.com/p/go-charset/data"
@@ -62,7 +64,10 @@ func(serial *Serial) ParseEpisodes(){
 
 func parse_episode(episode *Episode, channel chan bool) {
   episode.VideoLinks = make(map[string]string)
-  doc, _ := goquery.NewDocument(episode.Link)
+  doc, err := goquery.NewDocument(episode.Link)
+  if err != nil {
+    log.Fatal(err)
+  }
   vars, _ := doc.Find("object embed").First().Attr("flashvars")
   for _, r := range QUALITY_REGEXP.FindAllStringSubmatch(vars, -1) {
     episode.VideoLinks[r[1]+ "p"] = r[2]

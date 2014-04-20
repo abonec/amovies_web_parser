@@ -16,7 +16,7 @@ func init() {
   DOWNLOAD_DIR = setParam(DOWNLOAD_DIR, "DIR")
   TEMP_PREFIX = setParam(TEMP_PREFIX, "TEMP_PREFIX")
 
-  DOWNLOADS.Init()
+  DOWNLOADS.RestoreFile("downloads.json")
   fmt.Println("Download dir is: ", DOWNLOAD_DIR)
 }
 

@@ -9,6 +9,15 @@ import (
   "amovies_parser/conf"
 )
 
+func StartDownload(link, filename string) {
+  progress_chan := make(chan int)
+  go func(){
+    length_chan := make(chan int64)
+    go download(link, filename, progress_chan, length_chan)
+    go capture_downloading(link, filename, <- length_chan, progress_chan)
+  }()
+  <- progress_chan
+}
 
 func download(_url, file_name string, progress chan int, length_chan chan int64)(written int64, err error) {
   file_name = conf.DOWNLOAD_DIR + file_name
@@ -64,16 +73,7 @@ func capture_downloading(url, filename string, length int64, progress chan int){
   for p := range progress {
     download.Progress = p
     fmt.Println(p)
+    /* conf.DOWNLOADS.SaveToFile("downloads.json") */
   }
   conf.DOWNLOADS.Finish(download)
-}
-
-func Start_download(link, filename string) {
-  progress_chan := make(chan int)
-  go func(){
-    length_chan := make(chan int64)
-    go download(link, filename, progress_chan, length_chan)
-    go capture_downloading(link, filename, <- length_chan, progress_chan)
-  }()
-  <- progress_chan
 }

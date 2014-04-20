@@ -43,7 +43,7 @@ func render(w http.ResponseWriter, template string, data interface{}){
 func AddDownload(w http.ResponseWriter, r *http.Request) {
   filename := get_filename(r)
   link := r.FormValue("link")
-  helpers.Start_download(link, filename)
+  helpers.StartDownload(link, filename)
   fmt.Fprintln(w, "Download started: ", filename)
 }
 
