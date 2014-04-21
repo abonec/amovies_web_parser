@@ -9,14 +9,16 @@ import (
 var (
   DOWNLOAD_DIR = ""
   TEMP_PREFIX = ".part"
+  DOWNLOADS_FILE = "/tmp/downloads.json"
   DOWNLOADS = &models.Downloads{}
 )
 
 func init() {
   DOWNLOAD_DIR = setParam(DOWNLOAD_DIR, "DIR")
   TEMP_PREFIX = setParam(TEMP_PREFIX, "TEMP_PREFIX")
+  DOWNLOADS_FILE = setParam(DOWNLOADS_FILE, "DOWNLOADS_FILE")
 
-  DOWNLOADS.RestoreFile("downloads.json")
+  DOWNLOADS.RestoreFile(DOWNLOADS_FILE)
   fmt.Println("Download dir is: ", DOWNLOAD_DIR)
 }
 

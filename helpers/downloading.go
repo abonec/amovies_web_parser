@@ -4,7 +4,6 @@ import (
   "os"
   "net/http"
   "strconv"
-  "fmt"
   "io"
   "amovies_parser/conf"
 )
@@ -21,7 +20,7 @@ func StartDownload(link, filename string) {
 
 func download(_url, file_name string, progress chan int, length_chan chan int64)(written int64, err error) {
   file_name = conf.DOWNLOAD_DIR + file_name
-  temp_name := file_name + ".part"
+  temp_name := file_name + conf.TEMP_PREFIX
   out, _ := os.Create(temp_name)
   resp, _ := http.Get(_url)
   defer out.Close()
@@ -34,7 +33,6 @@ func download(_url, file_name string, progress chan int, length_chan chan int64)
   var percentage int64 = 0
 
 
-  fmt.Println(length)
 
   buff := make([]byte, 32*1024)
 
@@ -72,8 +70,6 @@ func capture_downloading(url, filename string, length int64, progress chan int){
   download := conf.DOWNLOADS.AddDownload(url, filename, length)
   for p := range progress {
     download.Progress = p
-    fmt.Println(p)
-    /* conf.DOWNLOADS.SaveToFile("downloads.json") */
   }
   conf.DOWNLOADS.Finish(download)
 }

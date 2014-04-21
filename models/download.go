@@ -4,6 +4,7 @@ import (
   "time"
   "encoding/json"
   "os"
+  "fmt"
   "io/ioutil"
 )
 
@@ -18,6 +19,7 @@ type Download struct {
 type Downloads struct {
   Downloading map[*Download]bool
   Downloaded map[*Download]bool
+  SaveFile string
 }
 func(d *Downloads)Init(){
   d.Downloading = make(map[*Download]bool)
@@ -32,26 +34,42 @@ func(d *Downloads)Finish(download *Download){
   download.Downloaded = true
   d.Downloaded[download] = true
   delete(d.Downloading, download)
+  d.SaveToFile()
 }
 
 func(d *Download)Url() string{
   return "/" + d.Filename
 }
 func(d *Downloads)ToJson() []byte{
-  result , _ := json.Marshal(&d)
+  downloaded := make([]Download, len(d.Downloaded), len(d.Downloaded))
+  i := 0
+  for download := range d.Downloaded {
+    downloaded[i] = *download
+    i++
+  }
+
+  result, err := json.Marshal(downloaded)
+  if err != nil {
+    fmt.Println(err)
+  }
   return result
 }
 
-func(d *Downloads)SaveToFile(path string)(err error){
-  err = ioutil.WriteFile(path, d.ToJson(), 0644)
+func(d *Downloads)SaveToFile()(err error){
+  err = ioutil.WriteFile(d.SaveFile, d.ToJson(), 0644)
   return
 }
 
-func(d *Downloads)RestoreJson(json_text []byte) {
-  err := json.Unmarshal(json_text, d)
-  if err != nil {
-    d.Init()
+func(d *Downloads)FromJson(json_text []byte) {
+  d.Init()
+  downloaded := make([]Download, 100, 100)
+  err := json.Unmarshal(json_text, &downloaded)
+  if err == nil {
+    for _, download := range downloaded {
+      d.Downloaded[&download] = true
+    }
   }
+
 }
 func(d *Downloads)RestoreFile(path string){
   fi, err := os.Open(path)
@@ -64,9 +82,11 @@ func(d *Downloads)RestoreFile(path string){
     if err != nil {
       d.Init()
     } else {
-      d.RestoreJson(json)
+      d.FromJson(json)
+      fmt.Println("Downloads loaded")
     }
   }
+  d.SaveFile = path
 }
 
 func close_file(file *os.File){
