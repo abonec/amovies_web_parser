@@ -1,8 +1,7 @@
 {{ define "links_page" }}
   <html>
     <head>
-      <script src='jquery.js' type='text/javascript'></script>
-      <script src='application.js' type='text/javascript'></script>
+      {{ template "assets" }}
     </head>
     <body>
       <table>

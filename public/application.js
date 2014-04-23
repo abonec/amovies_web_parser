@@ -10,4 +10,10 @@
            });
     e.preventDefault();
   });
+  $('.remove_download').click(function(e){
+    var id = $(this).data('id');
+    $.ajax({url: '/remove/'+id, type: 'DELETE'});
+    e.preventDefault();
+    location.reload();
+  });
 });

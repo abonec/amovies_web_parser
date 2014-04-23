@@ -12,6 +12,7 @@ func main() {
   m.Use(martini.Static("public")) 
   m.Use(martini.Static(conf.DOWNLOAD_DIR)) 
   m.Post("/download", controllers.AddDownload) 
+  m.Delete("/remove/:id", controllers.RemoveDownload) 
   m.Get("/links", controllers.LinksPage) 
   m.Get("/downloads", controllers.DownloadsPage) 
   m.Get("/", controllers.IndexPage) 

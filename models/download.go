@@ -15,15 +15,18 @@ type Download struct {
   Downloaded bool
   Length int64
   Added time.Time
+  Id int
 }
 type Downloads struct {
   Downloading map[*Download]bool
-  Downloaded map[*Download]bool
+  Downloaded map[int]*Download
   SaveFile string
+  DownloadDir string
+  LastId int
 }
 func(d *Downloads)Init(){
   d.Downloading = make(map[*Download]bool)
-  d.Downloaded = make(map[*Download]bool)
+  d.Downloaded = make(map[int]*Download)
 }
 func(d *Downloads)AddDownload(link, filename string, length int64)(download *Download){
   download = &Download{Filename: filename, Link: link, Progress: 0, Downloaded: false, Length: length, Added: time.Now()}
@@ -32,18 +35,34 @@ func(d *Downloads)AddDownload(link, filename string, length int64)(download *Dow
 }
 func(d *Downloads)Finish(download *Download){
   download.Downloaded = true
-  d.Downloaded[download] = true
+  d.AddToDownloaded(download)
   delete(d.Downloading, download)
+  d.SaveToFile()
+}
+func(d *Downloads)AddToDownloaded(download *Download){
+  d.LastId++
+  download.Id = d.LastId
+
+  d.Downloaded[download.Id] = download
+}
+
+func(d *Downloads)Remove(id int){
+  download := d.Downloaded[id]
+  download.RemoveFromDisk(d.DownloadDir)
+  delete(d.Downloaded, id)
   d.SaveToFile()
 }
 
 func(d *Download)Url() string{
   return "/" + d.Filename
 }
+func(d *Download)RemoveFromDisk(download_dir string) {
+  os.Remove(download_dir + d.Filename)
+}
 func(d *Downloads)ToJson() []byte{
   downloaded := make([]Download, len(d.Downloaded), len(d.Downloaded))
   i := 0
-  for download := range d.Downloaded {
+  for _, download := range d.Downloaded {
     downloaded[i] = *download
     i++
   }
@@ -66,7 +85,7 @@ func(d *Downloads)FromJson(json_text []byte) {
   err := json.Unmarshal(json_text, &downloaded)
   if err == nil {
     for _, download := range downloaded {
-      d.Downloaded[&download] = true
+      d.AddToDownloaded(&download)
     }
   }
 

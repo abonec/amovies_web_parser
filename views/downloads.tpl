@@ -1,6 +1,8 @@
 ﻿{{ define "downloads_page" }}
   <html>
-  <head></head>
+  <head>
+    {{ template "assets" }}
+  </head>
     <body>
       {{ template "get_serial_form" }}
       <table>
@@ -24,12 +26,14 @@
           <td>File</td>
           <td>Link</td>
           <td>Progress</td>
+          <td>Remove</td>
         </tr>
-        {{ range $download, $b := .Downloaded }}
+        {{ range $id, $download := .Downloaded }}
           <tr>
             <td><a href="{{ $download.Url }}">{{ $download.Filename }}</a></td>
             <td>{{ $download.Link }}</td>
             <td>{{ $download.Progress }}</td>
+            <td><a href="#" class="remove_download" data-id="{{ $id }}">(X)</a></td>
           </tr>
         {{ end }}
       </table>

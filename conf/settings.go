@@ -19,6 +19,7 @@ func init() {
   DOWNLOADS_FILE = setParam(DOWNLOADS_FILE, "DOWNLOADS_FILE")
 
   DOWNLOADS.RestoreFile(DOWNLOADS_FILE)
+  DOWNLOADS.DownloadDir = DOWNLOAD_DIR
   fmt.Println("Download dir is: ", DOWNLOAD_DIR)
 }
 

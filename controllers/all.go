@@ -10,10 +10,12 @@ import (
   "amovies_parser/models"
   "amovies_parser/helpers"
   "amovies_parser/conf"
+  "github.com/go-martini/martini"
+  "strconv"
 )
 
 var (
-  TEMPLATES = template.Must(template.ParseFiles("views/index.tpl", "views/links.tpl", "views/get_serial_form.tpl", "views/downloads.tpl"))
+  TEMPLATES = template.Must(template.ParseFiles("views/index.tpl", "views/links.tpl", "views/get_serial_form.tpl", "views/downloads.tpl", "views/assets.tpl"))
 )
 
 func IndexPage(w http.ResponseWriter, r *http.Request) {
@@ -30,6 +32,12 @@ func DownloadsPage(w http.ResponseWriter, r *http.Request) {
   // t, _ := template.ParseFiles("views/downloads.tpl")
   // t.Execute(w, DOWNLOADS)
   render(w, "downloads_page", conf.DOWNLOADS)
+}
+
+func RemoveDownload(params martini.Params) string {
+  id, _ := strconv.Atoi(params["id"])
+  conf.DOWNLOADS.Remove(id)
+  return ""
 }
 func get_param(r *http.Request, key string) string {
   uri, _ := url.Parse(r.RequestURI)
