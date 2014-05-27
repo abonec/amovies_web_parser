@@ -28,6 +28,7 @@ type Episode struct {
   Title string
   Link string
   VideoLinks map[string]string
+  ThumbUrl string
 }
 
 func(serial *Serial) Init(url string){
@@ -74,6 +75,8 @@ func parse_episode(episode *Episode, channel chan bool) {
   for _, r := range QUALITY_REGEXP.FindAllStringSubmatch(vars, -1) {
     episode.VideoLinks[r[1]+ "p"] = r[2]
   }
+  thumb, _ := doc.Find("#player_thumb").First().Attr("src")
+  episode.ThumbUrl = thumb
   channel <- true
 }
 

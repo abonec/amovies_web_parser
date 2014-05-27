@@ -1,0 +1,34 @@
+<div class="row">
+  {{ $prefix := .Prefix }}
+  {{ range .Episodes }}
+    {{ $episode_title := .Title }}
+    <div class="col-lg-3 episode">
+      <div class="text-center">
+        <a href="{{ .Link }}" target="_blank"><img class="poster margin-5px" src="{{ .ThumbUrl }}" /></a>
+        <h3>
+          {{ .Title }}
+        </h3>
+        <div class="btn-group dropup margin-5px">
+          <button class="btn btn-primary dropdown-toggle download-list" data-toggle="dropdown">download<span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            {{ range $quality, $link := .VideoLinks }}
+              <li>
+                <a class='down_link' data-episode='{{ $episode_title }}' data-link='{{ $link }}' data-prefix='{{ $prefix }}' href='{{ $link }}'>{{ $quality }}</a>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+        <div class="btn-group dropup margin-5px">
+          <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">open<span class="caret"></span></button>
+          <ul class="dropdown-menu">
+            {{ range $quality, $link := .VideoLinks }}
+              <li>
+                <a href="{{ $link }}">{{ $quality }}</a>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      </div>
+    </div>
+  {{ end }}
+</div>

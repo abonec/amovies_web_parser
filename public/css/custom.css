@@ -1,0 +1,13 @@
+.episode {
+  border: solid 1px;
+  margin: 10px;
+}
+.episode .poster {
+  width: 100%;
+}
+.margin-5px {
+  margin: 5px;
+}
+table .progress {
+  margin-bottom: 0px;
+}
